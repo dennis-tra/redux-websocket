@@ -101,7 +101,11 @@ export default class ReduxWebSocket {
    */
   send = (_store: MiddlewareAPI, { payload }: Action) => {
     if (this.websocket) {
-      this.websocket.send(JSON.stringify(payload));
+      if (payload instanceof Blob) {
+        this.websocket.send(payload)
+      } else {
+        this.websocket.send(JSON.stringify(payload));
+      }
     } else {
       throw new Error(
         'Socket connection not initialized. Dispatch WEBSOCKET_CONNECT first',
